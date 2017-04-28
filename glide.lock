@@ -1,0 +1,12 @@
+hash: 2bfaeb9fe6d0dd673bcec7f3d2935a749c34a34a857ec4f683fe210f56a7fc3f
+updated: 2017-04-26T18:07:21.077072358+09:00
+imports:
+- name: github.com/upamune/ed25519
+  version: 82ef173f9fd032c9790c846e2efcd3e4ddcd57e8
+  subpackages:
+  - internal/edwards25519
+- name: golang.org/x/crypto
+  version: 91902e332b9d47760598861512d2ae148f94ca58
+  subpackages:
+  - sha3
+testImports: []

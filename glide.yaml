@@ -1,0 +1,3 @@
+package: github.com/soramitsu/iroha-go
+import:
+- package: github.com/upamune/ed25519
