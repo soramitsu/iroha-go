@@ -1,2 +1,5 @@
+*.h
+*.cc
 .DS_Store
+.idea/
 vendor/
