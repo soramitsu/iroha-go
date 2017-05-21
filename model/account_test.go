@@ -1,4 +1,4 @@
-package iroha
+package model
 
 import (
 	"testing"
