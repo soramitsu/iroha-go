@@ -9,6 +9,7 @@ import (
 	"github.com/google/flatbuffers/go"
 	"github.com/soramitsu/iroha-go/command"
 	"github.com/soramitsu/iroha-go/model"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestTransaction_Serialize(t *testing.T) {
@@ -16,7 +17,7 @@ func TestTransaction_Serialize(t *testing.T) {
 		PubKey:      "account_public_key",
 		Quorum:      uint16(5),
 		Signatories: []string{"test_sig1", "test_sig2", "test_sig3"},
-		UUID:        "this-is-dummy-uuid",
+		UUID:        "",
 		UserName:    "serizawa",
 	}
 	addAccountCmd := command.AddAccount{
@@ -50,7 +51,7 @@ func TestTransaction_Serialize(t *testing.T) {
 	transaction2 := Transaction{}
 	transaction2.Deserialize(buf, 0)
 
-	//pp.Println(transaction)
-	//pp.Println(transaction2)
-	//assert.Equal(t, transaction, transaction2)
+	// pp.Println(transaction)
+	// pp.Println(transaction2)
+	assert.Equal(t, transaction, transaction2)
 }

@@ -4,6 +4,7 @@ import (
 	"github.com/google/flatbuffers/go"
 	"github.com/soramitsu/iroha-go/command"
 	"github.com/soramitsu/iroha-go/iroha"
+	"github.com/soramitsu/iroha-go/model"
 )
 
 type Transaction struct {
@@ -55,11 +56,20 @@ func (t *Transaction) Deserialize(buf []byte, offset flatbuffers.UOffsetT) {
 		}
 	}
 
-	// TODO: Deserialize Command
-	//var cmd flatbuffers.Table
-	//pp.Println(transaction.Command(&cmd))
-	//aa := iroha.GetRootAsAccountAdd(cmd.Bytes, 0).Table()
-	//pp.Println(aa.Bytes)
+	var table flatbuffers.Table
+	if ok := transaction.Command(&table); !ok {
+		panic("transaction.Command failed")
+	}
+
+	var cmd iroha.AccountAdd
+	cmd.Init(table.Bytes, table.Pos)
+	b := cmd.AccountBytes()
+
+	account := model.Account{}
+	account.Deserialize(b, 0)
+	addAccountCmd := command.AddAccount{account}
+	t.Command = addAccountCmd
+	// account := iroha.GetRootAsAccount(b, 0)
 
 	t.Signatures = sigs
 	t.PublicKey = string(transaction.CreatorPubKey())
