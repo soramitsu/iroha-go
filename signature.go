@@ -2,7 +2,7 @@ package iroha
 
 import (
 	"github.com/google/flatbuffers/go"
-	"github.com/upamune/iroha-go/iroha"
+	"github.com/soramitsu/iroha-go/iroha"
 )
 
 type Signature struct {

@@ -2,7 +2,7 @@ package model
 
 import (
 	"github.com/google/flatbuffers/go"
-	"github.com/upamune/iroha-go/iroha"
+	"github.com/soramitsu/iroha-go/iroha"
 )
 
 type Account struct {

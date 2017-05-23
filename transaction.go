@@ -2,9 +2,8 @@ package iroha
 
 import (
 	"github.com/google/flatbuffers/go"
-	"github.com/k0kubun/pp"
-	"github.com/upamune/iroha-go/command"
-	"github.com/upamune/iroha-go/iroha"
+	"github.com/soramitsu/iroha-go/command"
+	"github.com/soramitsu/iroha-go/iroha"
 )
 
 type Transaction struct {

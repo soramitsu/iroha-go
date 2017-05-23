@@ -7,8 +7,8 @@ import (
 	"fmt"
 
 	"github.com/google/flatbuffers/go"
-	"github.com/upamune/iroha-go/command"
-	"github.com/upamune/iroha-go/model"
+	"github.com/soramitsu/iroha-go/command"
+	"github.com/soramitsu/iroha-go/model"
 )
 
 func TestTransaction_Serialize(t *testing.T) {

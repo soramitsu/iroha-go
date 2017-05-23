@@ -5,7 +5,7 @@ import (
 
 	"fmt"
 
-	"github.com/upamune/iroha-go/iroha"
+	"github.com/soramitsu/iroha-go/iroha"
 	"google.golang.org/grpc"
 )
 

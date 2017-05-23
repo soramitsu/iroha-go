@@ -2,8 +2,8 @@ package command
 
 import (
 	"github.com/google/flatbuffers/go"
-	"github.com/upamune/iroha-go/iroha"
-	"github.com/upamune/iroha-go/model"
+	"github.com/soramitsu/iroha-go/iroha"
+	"github.com/soramitsu/iroha-go/model"
 )
 
 type AddAccount struct {

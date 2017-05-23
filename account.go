@@ -1,7 +1,7 @@
 package iroha
 
 import (
-	"github.com/upamune/iroha-go/model"
+	"github.com/soramitsu/iroha-go/model"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 )
