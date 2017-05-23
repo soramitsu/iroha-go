@@ -11,12 +11,12 @@ type AddAccount struct {
 }
 
 func (cmd AddAccount) Serialize(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
-	builder2 := flatbuffers.NewBuilder(0)
+	cmdBuilder := flatbuffers.NewBuilder(0)
 
-	account := cmd.Account.Serialize(builder2)
+	account := cmd.Account.Serialize(cmdBuilder)
 
-	builder2.Finish(account)
-	b := builder2.FinishedBytes()
+	cmdBuilder.Finish(account)
+	b := cmdBuilder.FinishedBytes()
 
 	bv := builder.CreateByteVector(b)
 	iroha.AccountAddStart(builder)

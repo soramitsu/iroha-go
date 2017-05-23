@@ -69,7 +69,6 @@ func (t *Transaction) Deserialize(buf []byte, offset flatbuffers.UOffsetT) {
 	account.Deserialize(b, 0)
 	addAccountCmd := command.AddAccount{account}
 	t.Command = addAccountCmd
-	// account := iroha.GetRootAsAccount(b, 0)
 
 	t.Signatures = sigs
 	t.PublicKey = string(transaction.CreatorPubKey())
