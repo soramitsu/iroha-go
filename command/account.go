@@ -12,9 +12,7 @@ type AddAccount struct {
 
 func (cmd AddAccount) Serialize(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	cmdBuilder := flatbuffers.NewBuilder(0)
-
 	account := cmd.Account.Serialize(cmdBuilder)
-
 	cmdBuilder.Finish(account)
 	b := cmdBuilder.FinishedBytes()
 
@@ -26,4 +24,19 @@ func (cmd AddAccount) Serialize(builder *flatbuffers.Builder) flatbuffers.UOffse
 
 func (cmd AddAccount) Type() byte {
 	return iroha.CommandAccountAdd
+}
+
+type RemoveAccount struct {
+	model.Account
+}
+
+func (cmd RemoveAccount) Serialize(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+	pubkey := builder.CreateString(cmd.Account.PubKey)
+	iroha.AccountRemoveStart(builder)
+	iroha.AccountRemoveAddPubkey(builder, pubkey)
+	return iroha.AccountRemoveEnd(builder)
+}
+
+func (cmd RemoveAccount) Type() byte {
+	return iroha.CommandAccountRemove
 }
