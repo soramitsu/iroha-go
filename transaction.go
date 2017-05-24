@@ -4,7 +4,6 @@ import (
 	"github.com/google/flatbuffers/go"
 	"github.com/soramitsu/iroha-go/command"
 	"github.com/soramitsu/iroha-go/iroha"
-	"github.com/soramitsu/iroha-go/model"
 )
 
 type Transaction struct {
@@ -63,22 +62,14 @@ func (t *Transaction) Deserialize(buf []byte, offset flatbuffers.UOffsetT) {
 
 	switch transaction.CommandType() {
 	case iroha.CommandAccountAdd:
-		var cmd iroha.AccountAdd
-		cmd.Init(table.Bytes, table.Pos)
-		b := cmd.AccountBytes()
-
-		account := model.Account{}
-		account.Deserialize(b, 0)
-		addAccountCmd := command.AddAccount{account}
-		t.Command = addAccountCmd
+		cmd := &command.AddAccount{}
+		cmd.Deserialize(&table)
+		t.Command = cmd
 
 	case iroha.CommandAccountRemove:
-		var cmd iroha.AccountRemove
-		cmd.Init(table.Bytes, table.Pos)
-
-		removeAccountCmd := command.RemoveAccount{}
-		removeAccountCmd.PubKey = string(cmd.Pubkey())
-		t.Command = removeAccountCmd
+		cmd := &command.RemoveAccount{}
+		cmd.Deserialize(&table)
+		t.Command = cmd
 	}
 
 	t.Signatures = sigs

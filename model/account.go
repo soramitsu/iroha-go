@@ -39,7 +39,7 @@ func (a Account) Serialize(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return iroha.AccountEnd(builder)
 }
 
-func (a *Account) Deserialize(buf []byte, offset flatbuffers.UOffsetT) error {
+func (a *Account) Deserialize(buf []byte, offset flatbuffers.UOffsetT) {
 	account := iroha.GetRootAsAccount(buf, offset)
 
 	signatories := make([]string, account.SignatoriesLength())
@@ -52,8 +52,6 @@ func (a *Account) Deserialize(buf []byte, offset flatbuffers.UOffsetT) error {
 	a.Quorum = account.UseKeys()
 	a.UserName = string(account.Alias())
 	a.Signatories = signatories
-
-	return nil
 }
 
 type AccountsQuery struct {

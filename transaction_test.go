@@ -20,7 +20,7 @@ func TestTransaction_Serialize(t *testing.T) {
 		UUID:        "",
 		UserName:    "serizawa",
 	}
-	addAccountCmd := command.AddAccount{
+	addAccountCmd := &command.AddAccount{
 		Account: account,
 	}
 
@@ -55,11 +55,12 @@ func TestTransaction_Serialize(t *testing.T) {
 	// pp.Println(transaction2)
 	assert.Equal(t, transaction, transaction2)
 }
+
 func TestTransaction_Serialize_RemoveAccount(t *testing.T) {
 	account := model.Account{
 		PubKey: "account_public_key",
 	}
-	removeAccountCmd := command.RemoveAccount{
+	removeAccountCmd := &command.RemoveAccount{
 		Account: account,
 	}
 
