@@ -7,6 +7,7 @@ import (
 	"fmt"
 
 	"github.com/google/flatbuffers/go"
+	"github.com/k0kubun/pp"
 	"github.com/soramitsu/iroha-go/command"
 	"github.com/soramitsu/iroha-go/model"
 	"github.com/stretchr/testify/assert"
@@ -93,5 +94,47 @@ func TestTransaction_Serialize_RemoveAccount(t *testing.T) {
 
 	// pp.Println(transaction)
 	// pp.Println(transaction2)
+	assert.Equal(t, transaction, transaction2)
+}
+
+func TestTransaction_Serialize_AddSignatory(t *testing.T) {
+	account := model.Account{
+		PubKey:      "account_public_key",
+		Signatories: []string{"sig1", "sig2", "sig3"},
+	}
+
+	addSignatoryCmd := &command.AddSignatory{
+		Account: account,
+	}
+
+	lsigs := 3
+	sigs := make([]Signature, lsigs)
+	for i := 0; i < lsigs; i++ {
+		s := Signature{
+			PublicKey: fmt.Sprintf("test_public_key_%d", i+1),
+			Signature: fmt.Sprintf("test_signature_%d", i+1),
+			Timestamp: uint64(time.Now().Unix() + int64(i)),
+		}
+		sigs[i] = s
+	}
+
+	transaction := Transaction{
+		Command:    addSignatoryCmd,
+		Signatures: sigs,
+		PublicKey:  "test_public_key",
+		Timestamp:  uint64(time.Now().Unix()),
+	}
+
+	builder := flatbuffers.NewBuilder(0)
+	tbuf := transaction.Serialize(builder)
+	builder.Finish(tbuf)
+
+	buf := builder.FinishedBytes()
+
+	transaction2 := Transaction{}
+	transaction2.Deserialize(buf, 0)
+
+	pp.Println(transaction)
+	pp.Println(transaction2)
 	assert.Equal(t, transaction, transaction2)
 }

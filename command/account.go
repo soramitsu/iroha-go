@@ -57,3 +57,44 @@ func (cmd *RemoveAccount) Deserialize(table *flatbuffers.Table) {
 func (cmd *RemoveAccount) Type() byte {
 	return iroha.CommandAccountRemove
 }
+
+type AddSignatory struct {
+	model.Account
+}
+
+func (cmd *AddSignatory) Serialize(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+	account := builder.CreateString(cmd.Account.PubKey)
+
+	lsigs := len(cmd.Account.Signatories)
+	ss := make([]flatbuffers.UOffsetT, lsigs)
+	for i := 0; i < lsigs; i++ {
+		ss[i] = builder.CreateString(cmd.Account.Signatories[i])
+	}
+
+	iroha.AccountAddSignatoryStartSignatoryVector(builder, lsigs)
+	for i := lsigs - 1; i >= 0; i-- {
+		builder.PrependUOffsetT(ss[i])
+	}
+	sigs := builder.EndVector(lsigs)
+
+	iroha.AccountAddSignatoryStart(builder)
+	iroha.AccountAddSignatoryAddAccount(builder, account)
+	iroha.AccountAddSignatoryAddSignatory(builder, sigs)
+	return iroha.AccountAddSignatoryEnd(builder)
+}
+
+func (cmd *AddSignatory) Deserialize(table *flatbuffers.Table) {
+	var icmd iroha.AccountAddSignatory
+	icmd.Init(table.Bytes, table.Pos)
+
+	sigs := make([]string, icmd.SignatoryLength())
+	for i := 0; i < icmd.SignatoryLength(); i++ {
+		sigs[i] = string(icmd.Signatory(i))
+	}
+	cmd.Account.PubKey = string(icmd.Account())
+	cmd.Account.Signatories = sigs
+}
+
+func (cmd *AddSignatory) Type() byte {
+	return iroha.CommandAccountAddSignatory
+}

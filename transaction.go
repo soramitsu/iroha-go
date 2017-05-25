@@ -69,6 +69,9 @@ func (t *Transaction) Deserialize(buf []byte, offset flatbuffers.UOffsetT) error
 	case iroha.CommandAccountRemove:
 		cmd = &command.RemoveAccount{}
 
+	case iroha.CommandAccountAddSignatory:
+		cmd = &command.AddSignatory{}
+
 	default:
 		return errors.New("unknown command type")
 	}
