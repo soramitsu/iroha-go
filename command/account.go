@@ -58,12 +58,12 @@ func (cmd *RemoveAccount) Type() byte {
 	return iroha.CommandAccountRemove
 }
 
-type AddSignatory struct {
+type AccountAddSignatory struct {
 	Account     string
 	Signatories []string
 }
 
-func (cmd *AddSignatory) Serialize(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+func (cmd *AccountAddSignatory) Serialize(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	account := builder.CreateString(cmd.Account)
 
 	lsigs := len(cmd.Signatories)
@@ -84,7 +84,7 @@ func (cmd *AddSignatory) Serialize(builder *flatbuffers.Builder) flatbuffers.UOf
 	return iroha.AccountAddSignatoryEnd(builder)
 }
 
-func (cmd *AddSignatory) Deserialize(table *flatbuffers.Table) {
+func (cmd *AccountAddSignatory) Deserialize(table *flatbuffers.Table) {
 	var icmd iroha.AccountAddSignatory
 	icmd.Init(table.Bytes, table.Pos)
 
@@ -96,6 +96,6 @@ func (cmd *AddSignatory) Deserialize(table *flatbuffers.Table) {
 	cmd.Signatories = sigs
 }
 
-func (cmd *AddSignatory) Type() byte {
+func (cmd *AccountAddSignatory) Type() byte {
 	return iroha.CommandAccountAddSignatory
 }

@@ -53,14 +53,14 @@ func TestRemoveAccount(t *testing.T) {
 }
 
 func TestAccountAddSignatory(t *testing.T) {
-	cmd := &AddSignatory{
+	cmd := &AccountAddSignatory{
 		Account:     "account_public_key",
 		Signatories: []string{"sig1", "sig2", "sig3"},
 	}
 
 	buf := serialize(cmd)
 
-	cmd2 := &AddSignatory{}
+	cmd2 := &AccountAddSignatory{}
 	root := iroha.GetRootAsAccountAddSignatory(buf, 0)
 	table := root.Table()
 	cmd2.Deserialize(&table)
