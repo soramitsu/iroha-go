@@ -55,3 +55,4 @@ func TestTransaction_Serialize(t *testing.T) {
 	// pp.Println(transaction2)
 	assert.Equal(t, transaction, transaction2)
 }
+

@@ -4,6 +4,7 @@ import (
 	"github.com/soramitsu/iroha-go/model"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
+	"github.com/google/flatbuffers/go"
 )
 
 func (c *Client) AddAccount(ctx context.Context, account model.Account, opts ...grpc.CallOption) error {
@@ -12,8 +13,12 @@ func (c *Client) AddAccount(ctx context.Context, account model.Account, opts ...
 		return err
 	}
 	// TODO: Account →　FBS
-	res, err := client.Torii(ctx, nil, opts...)
-	c.Logger.Printf("[INFO]\tAddAccount\tMessage\t%s", res.Message())
+	builder := flatbuffers.NewBuilder(0)
+	a := account.Serialize(builder)
+	builder.Finish(a)
+
+	_, err = client.Torii(ctx, builder, opts...)
+	//c.Logger.Printf("[INFO]\tAddAccount\tMessage\t%s", res.Message())
 
 	return err
 }

@@ -11,6 +11,6 @@ deps: install-glide
 	glide install
 test: 
 	@for p in $(PACKAGE_LIST); do \
-		echo "==> Unit Testing $$p ..."; \
+		echo "==> Unit Testing $$p"; \
 		go test -v $(BASE_PACKAGE)/$$p || exit 1; \
 	done
