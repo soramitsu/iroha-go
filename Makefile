@@ -1,3 +1,6 @@
+BASE_PACKAGE = github.com/soramitsu/iroha-go
+PACKAGE_LIST := . command
+
 flatbuf:
 	flatc --gen-mutable --go --grpc -o . schema/*.fbs
 install-go:
@@ -6,5 +9,8 @@ install-glide:
 	sh util/glide.sh v0.12.3
 deps: install-glide
 	glide install
-test:
-	go test -v -race $(go list ./... | grep -v vendor)
+test: 
+	@for p in $(PACKAGE_LIST); do \
+		echo "==> Unit Testing $$p ..."; \
+		go test -v $(BASE_PACKAGE)/$$p || exit 1; \
+	done
