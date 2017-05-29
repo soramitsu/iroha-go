@@ -67,3 +67,19 @@ func TestAccountAddSignatory(t *testing.T) {
 
 	assert.Equal(t, cmd, cmd2)
 }
+
+func TestAccountRemoveSignatory(t *testing.T) {
+	cmd := &AccountRemoveSignatory{
+		Account:     "account_public_key",
+		Signatories: []string{"sig1", "sig2", "sig3"},
+	}
+
+	buf := serialize(cmd)
+
+	cmd2 := &AccountRemoveSignatory{}
+	root := iroha.GetRootAsAccountRemoveSignatory(buf, 0)
+	table := root.Table()
+	cmd2.Deserialize(&table)
+
+	assert.Equal(t, cmd, cmd2)
+}
