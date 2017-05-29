@@ -20,7 +20,7 @@ func TestTransaction_Serialize(t *testing.T) {
 		UUID:        "",
 		UserName:    "serizawa",
 	}
-	addAccountCmd := command.AddAccount{
+	addAccountCmd := &command.AddAccount{
 		Account: account,
 	}
 

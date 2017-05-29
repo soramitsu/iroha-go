@@ -2,9 +2,9 @@ package iroha
 
 import (
 	"github.com/google/flatbuffers/go"
+	"github.com/pkg/errors"
 	"github.com/soramitsu/iroha-go/command"
 	"github.com/soramitsu/iroha-go/iroha"
-	"github.com/soramitsu/iroha-go/model"
 )
 
 type Transaction struct {
@@ -40,7 +40,7 @@ func (t Transaction) Serialize(builder *flatbuffers.Builder) flatbuffers.UOffset
 	return iroha.TransactionEnd(builder)
 }
 
-func (t *Transaction) Deserialize(buf []byte, offset flatbuffers.UOffsetT) {
+func (t *Transaction) Deserialize(buf []byte, offset flatbuffers.UOffsetT) error {
 	transaction := iroha.GetRootAsTransaction(buf, offset)
 
 	// Signatures
@@ -58,20 +58,30 @@ func (t *Transaction) Deserialize(buf []byte, offset flatbuffers.UOffsetT) {
 
 	var table flatbuffers.Table
 	if ok := transaction.Command(&table); !ok {
-		panic("transaction.Command failed")
+		return errors.New("transaction.Command failed")
 	}
 
-	var cmd iroha.AccountAdd
-	cmd.Init(table.Bytes, table.Pos)
-	b := cmd.AccountBytes()
+	var cmd command.Commander
+	switch transaction.CommandType() {
+	case iroha.CommandAccountAdd:
+		cmd = &command.AddAccount{}
 
-	account := model.Account{}
-	account.Deserialize(b, 0)
-	addAccountCmd := command.AddAccount{account}
-	t.Command = addAccountCmd
-	// account := iroha.GetRootAsAccount(b, 0)
+	case iroha.CommandAccountRemove:
+		cmd = &command.RemoveAccount{}
+
+	case iroha.CommandAccountAddSignatory:
+		cmd = &command.AccountAddSignatory{}
+
+	default:
+		return errors.New("unknown command type")
+	}
+
+	cmd.Deserialize(&table)
+	t.Command = cmd
 
 	t.Signatures = sigs
 	t.PublicKey = string(transaction.CreatorPubKey())
 	t.Timestamp = transaction.Timestamp()
+
+	return nil
 }
