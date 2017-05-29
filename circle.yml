@@ -1,8 +1,16 @@
+machine:
+  environment:
+    PATH: "${HOME}/.go_workspace/bin:${PATH}"
+    GOPATH: "${HOME}/.go_workspace"
+
 dependencies:
   override:
+    - mkdir -p ${HOME}/.go_workspace/bin
     - curl https://glide.sh/get | sh
-    - glide install
+    - make deps
+    - mkdir -p ${HOME}/.go_workspace/src/github.com/soramitsu
 
 test:
   override:
-    - go test -v -race ./...
+    - cd ${HOME}/.go_workspace/src/github.com/soramitsu/iroha-go
+    - make test

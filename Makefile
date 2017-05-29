@@ -3,4 +3,4 @@ flatbuf:
 deps: 
 	glide install	
 test:
-	go test -v
+	go test -v -race $(go list ./... | grep -v vendor)
