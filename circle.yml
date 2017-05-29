@@ -1,16 +1,25 @@
+general:
+  build_dir: ../.go_workspace/src/github.com/soramitsu/$CIRCLE_PROJECT_REPONAME
 machine:
+  timezone: Asia/Tokyo
   environment:
-    PATH: "${HOME}/.go_workspace/bin:${PATH}"
+    GOROOT_BOOTSTRAP: /usr/local/go
     GOPATH: "${HOME}/.go_workspace"
+    PATH: "/usr/local/go/bin:${PATH}"
+  post:
+    - rm -rf ".go_workspace/src/github.com/soramitsu/$CIRCLE_PROJECT_REPONAME"
+    - mkdir -p ".go_workspace/src/github.com/soramitsu"
+    - mv $CIRCLE_PROJECT_REPONAME ".go_workspace/src/github.com/soramitsu/"
+    - mkdir -p $CIRCLE_PROJECT_REPONAME
 
 dependencies:
-  override:
-    - mkdir -p ${HOME}/.go_workspace/bin
-    - curl https://glide.sh/get | sh
+  cache_directories:
+    - "~/.glide"
+    - "~/.tool"
+  pre:
+    - make install-go
     - make deps
-    - mkdir -p ${HOME}/.go_workspace/src/github.com/soramitsu
 
 test:
   override:
-    - cd ${HOME}/.go_workspace/src/github.com/soramitsu/iroha-go
     - make test
