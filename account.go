@@ -1,6 +1,7 @@
 package iroha
 
 import (
+	"github.com/google/flatbuffers/go"
 	"github.com/soramitsu/iroha-go/model"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -12,8 +13,13 @@ func (c *Client) AddAccount(ctx context.Context, account model.Account, opts ...
 		return err
 	}
 	// TODO: Account →　FBS
-	res, err := client.Torii(ctx, nil, opts...)
-	c.Logger.Printf("[INFO]\tAddAccount\tMessage\t%s", res.Message())
+	builder := flatbuffers.NewBuilder(0)
+	a := account.Serialize(builder)
+	builder.Finish(a)
+
+	resp, err := client.Torii(ctx, builder, opts...)
+	r := model.NewResponse(resp)
+	c.Logger.Printf("[INFO]\tAddAccount\tMessage\t%s\tCode\t %d", r.Message, r.Code)
 
 	return err
 }

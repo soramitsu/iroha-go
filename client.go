@@ -1,10 +1,11 @@
 package iroha
 
 import (
-	"log"
-
 	"fmt"
+	"log"
+	"os"
 
+	"github.com/google/flatbuffers/go"
 	"github.com/soramitsu/iroha-go/iroha"
 	"google.golang.org/grpc"
 )
@@ -16,13 +17,15 @@ type Client struct {
 	Logger  *log.Logger
 }
 
-func NewClient(host string, port int, options []grpc.DialOption, logger *log.Logger) *Client {
-	endpoint := fmt.Sprintf("%s:%d", host, port)
+func NewClient(host string, port string, logger *log.Logger, options ...grpc.DialOption) *Client {
+	endpoint := fmt.Sprintf("%s:%s", host, port)
 
 	if logger == nil {
-		lgr := log.Logger{}
-		logger = &lgr
+		lgr := log.New(os.Stdout, "iroha-go", log.LstdFlags)
+		logger = lgr
 	}
+
+	options = append(options, grpc.WithCodec(flatbuffers.FlatbuffersCodec{}))
 
 	return &Client{
 		Endpoint: endpoint,
@@ -39,4 +42,3 @@ func (c *Client) getClient() (iroha.SumeragiClient, error) {
 
 	return iroha.NewSumeragiClient(conn), nil
 }
-

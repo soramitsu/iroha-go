@@ -25,9 +25,9 @@ func TestTransaction_Serialize(t *testing.T) {
 	}
 
 	lsigs := 3
-	sigs := make([]Signature, lsigs)
+	sigs := make([]model.Signature, lsigs)
 	for i := 0; i < lsigs; i++ {
-		s := Signature{
+		s := model.Signature{
 			PublicKey: fmt.Sprintf("test_public_key_%d", i+1),
 			Signature: fmt.Sprintf("test_signature_%d", i+1),
 			Timestamp: uint64(time.Now().Unix() + int64(i)),
