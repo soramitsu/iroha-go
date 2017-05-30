@@ -5,8 +5,6 @@ import (
 	"net"
 	"testing"
 
-	"log"
-
 	"github.com/soramitsu/iroha-go/mock"
 	"github.com/soramitsu/iroha-go/model"
 	"github.com/stretchr/testify/assert"
@@ -30,8 +28,7 @@ func TestClient(t *testing.T) {
 		require.NoError(srv.Serve(l))
 	}()
 
-	logger := &log.Logger{}
-	client := NewClient(host, port, logger, grpc.WithInsecure())
+	client := NewClient(host, port, nil, grpc.WithInsecure())
 
 	ctx := context.Background()
 	a := model.Account{}
