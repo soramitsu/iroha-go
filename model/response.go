@@ -26,7 +26,6 @@ func NewResponse(resp *iroha.Response) *Response {
 	r := &Response{
 		Code:resp.Code(),
 		Message:string(resp.Message()),
-
 	}
 
 	sig := iroha.Signature{}
