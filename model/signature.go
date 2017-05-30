@@ -1,4 +1,4 @@
-package iroha
+package model
 
 import (
 	"github.com/google/flatbuffers/go"

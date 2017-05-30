@@ -1,8 +1,11 @@
 package mock
 
 import (
+	"time"
+
 	"github.com/google/flatbuffers/go"
 	"github.com/soramitsu/iroha-go/iroha"
+	"github.com/soramitsu/iroha-go/model"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 )
@@ -10,9 +13,19 @@ import (
 type mockSumeragiServer struct{}
 
 func (ss mockSumeragiServer) Torii(ctx context.Context, ev *iroha.Transaction) (*flatbuffers.Builder, error) {
+	res := model.Response{
+		Message: "test_response_message",
+		Signature: model.Signature{
+			PublicKey: "test_signature",
+			Signature: "test_signature",
+			Timestamp: uint64(time.Now().Unix()),
+		},
+		Code: iroha.CodeUNDECIDED,
+	}
 	builder := flatbuffers.NewBuilder(0)
-	builder.Finish(0)
-	// TODO (@upamune): return iroha.Transaction as *flatbuffers.Builder
+	ro := res.Serialize(builder)
+	builder.Finish(ro)
+
 	return builder, nil
 }
 

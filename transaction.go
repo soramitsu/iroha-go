@@ -5,12 +5,13 @@ import (
 	"github.com/pkg/errors"
 	"github.com/soramitsu/iroha-go/command"
 	"github.com/soramitsu/iroha-go/iroha"
+	"github.com/soramitsu/iroha-go/model"
 )
 
 type Transaction struct {
 	Command    command.Commander
 	PublicKey  string
-	Signatures []Signature
+	Signatures []model.Signature
 	Timestamp  uint64
 }
 
@@ -45,11 +46,11 @@ func (t *Transaction) Deserialize(buf []byte, offset flatbuffers.UOffsetT) error
 
 	// Signatures
 	lsig := transaction.SignaturesLength()
-	sigs := make([]Signature, lsig)
+	sigs := make([]model.Signature, lsig)
 	for i := 0; i < lsig; i++ {
 		s := iroha.Signature{}
 		transaction.Signatures(&s, i)
-		sigs[i] = Signature{
+		sigs[i] = model.Signature{
 			PublicKey: string(s.PublicKey()),
 			Signature: string(s.SignatureBytes()),
 			Timestamp: s.Timestamp(),

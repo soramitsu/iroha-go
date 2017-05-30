@@ -1,10 +1,10 @@
 package iroha
 
 import (
+	"github.com/google/flatbuffers/go"
 	"github.com/soramitsu/iroha-go/model"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
-	"github.com/google/flatbuffers/go"
 )
 
 func (c *Client) AddAccount(ctx context.Context, account model.Account, opts ...grpc.CallOption) error {
@@ -17,8 +17,9 @@ func (c *Client) AddAccount(ctx context.Context, account model.Account, opts ...
 	a := account.Serialize(builder)
 	builder.Finish(a)
 
-	_, err = client.Torii(ctx, builder, opts...)
-	//c.Logger.Printf("[INFO]\tAddAccount\tMessage\t%s", res.Message())
+	resp, err := client.Torii(ctx, builder, opts...)
+	r := model.NewResponse(resp)
+	c.Logger.Printf("[INFO]\tAddAccount\tMessage\t%s\tCode\t %d", r.Message, r.Code)
 
 	return err
 }
