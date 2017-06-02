@@ -43,16 +43,16 @@ table TxRequest {
 }
 
 rpc_service Sumeragi {
+  // Used by sending block in consensus.
+  Communicate(Block): SumeragiResponse (streaming: "none");
+}
+
+rpc_service ClientService {
   // Used by sending transaction
   Torii(Transaction): SumeragiResponse (streaming: "none");
 
-  // Used by sending block in consensus.
-  Consensus(Block):   SumeragiResponse (streaming: "none");
+  // Query(QueryRequestWrapper): QueryRequestWrapper (streaming: "none");
 }
-
-//rpc_service DataStore {
-//  Query(QueryRequestWrapper): QueryRequestWrapper (streaming: "none");
-//}
 
 rpc_service Hijiri {
   // Kagami means ping

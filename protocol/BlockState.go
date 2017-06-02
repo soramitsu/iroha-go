@@ -3,12 +3,12 @@
 package protocol
 
 const (
-	BlockStateCOMMITTED = 0
-	BlockStateUNCOMMITTED = 1
+	BlockStateUNCOMMITTED = 0
+	BlockStateCOMMITTED = 1
 )
 
 var EnumNamesBlockState = map[int]string{
-	BlockStateCOMMITTED:"COMMITTED",
 	BlockStateUNCOMMITTED:"UNCOMMITTED",
+	BlockStateCOMMITTED:"COMMITTED",
 }
 

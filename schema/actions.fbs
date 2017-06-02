@@ -1,5 +1,5 @@
-include "asset_actions.fbs";
 include "account_actions.fbs";
+include "asset_actions.fbs";
 include "domain_actions.fbs";
 include "peer_actions.fbs";
 

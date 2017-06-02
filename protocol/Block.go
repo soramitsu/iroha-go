@@ -140,29 +140,16 @@ func (rcv *Block) MutateHeight(n uint64) bool {
 	return rcv._tab.MutateUint64Slot(14, n)
 }
 
-func (rcv *Block) Created(j int) byte {
+func (rcv *Block) Created() uint64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.GetByte(a + flatbuffers.UOffsetT(j*1))
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
 	}
 	return 0
 }
 
-func (rcv *Block) CreatedLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
-func (rcv *Block) CreatedBytes() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
+func (rcv *Block) MutateCreated(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(16, n)
 }
 
 func (rcv *Block) BlockState() byte {
@@ -210,11 +197,8 @@ func BlockStartMerkleRootVector(builder *flatbuffers.Builder, numElems int) flat
 func BlockAddHeight(builder *flatbuffers.Builder, height uint64) {
 	builder.PrependUint64Slot(5, height, 0)
 }
-func BlockAddCreated(builder *flatbuffers.Builder, created flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(created), 0)
-}
-func BlockStartCreatedVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(1, numElems, 1)
+func BlockAddCreated(builder *flatbuffers.Builder, created uint64) {
+	builder.PrependUint64Slot(6, created, 0)
 }
 func BlockAddBlockState(builder *flatbuffers.Builder, blockState byte) {
 	builder.PrependByteSlot(7, blockState, 0)

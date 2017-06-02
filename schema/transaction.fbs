@@ -3,16 +3,9 @@ include "primitives.fbs";
 
 namespace protocol;
 
-enum Status: ubyte { Reject, Approve, Pending}
-
-table SignatureWithState{
-    signature: Signature;
-    state:     Status;
-}
-
 table Transaction {
   creator: Signature (required);
-  sigs:    [SignatureWithState];
+  sigs:    [Signature];
   created: ulong;   // 64 bit(8 bytes)
   nonce:   uint;    // 32 bit(4 bytes)
 

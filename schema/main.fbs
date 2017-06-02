@@ -7,7 +7,7 @@ file_identifier "IROH";
 file_extension  "iroha";
 
 enum ResponseCode: ubyte {OK, FAIL}
-enum BlockState: ubyte {COMMITTED, UNCOMMITTED}
+enum BlockState: ubyte {UNCOMMITTED, COMMITTED}
 
 table Block {
   txs:          [TransactionWrapper] (required);
@@ -16,7 +16,7 @@ table Block {
   length:       uint;
   merkle_root:  [ubyte] (required);
   height:       ulong;
-  created:      [ubyte] (required);
+  created:      ulong;
   block_state:  BlockState;
 }
 

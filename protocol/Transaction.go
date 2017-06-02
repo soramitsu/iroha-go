@@ -39,7 +39,7 @@ func (rcv *Transaction) Creator(obj *Signature) *Signature {
 	return nil
 }
 
-func (rcv *Transaction) Sigs(obj *SignatureWithState, j int) bool {
+func (rcv *Transaction) Sigs(obj *Signature, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
