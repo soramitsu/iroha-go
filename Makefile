@@ -1,5 +1,5 @@
 BASE_PACKAGE = github.com/soramitsu/iroha-go
-PACKAGE_LIST := . command
+PACKAGE_LIST := . 
 
 flatbuf:
 	flatc --gen-mutable --go --grpc -o . schema/*.fbs

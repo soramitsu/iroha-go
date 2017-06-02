@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/google/flatbuffers/go"
-	"github.com/soramitsu/iroha-go/iroha"
+	"github.com/soramitsu/iroha-go/protocol"
 	"github.com/soramitsu/iroha-go/model"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -12,7 +12,7 @@ import (
 
 type mockSumeragiServer struct{}
 
-func (ss mockSumeragiServer) Torii(ctx context.Context, ev *iroha.Transaction) (*flatbuffers.Builder, error) {
+func (ss mockSumeragiServer) Torii(ctx context.Context, ev *protocol.Transaction) (*flatbuffers.Builder, error) {
 	res := model.Response{
 		Message: "test_response_message",
 		Signature: model.Signature{
@@ -20,7 +20,7 @@ func (ss mockSumeragiServer) Torii(ctx context.Context, ev *iroha.Transaction) (
 			Signature: "test_signature",
 			Timestamp: uint64(time.Now().Unix()),
 		},
-		Code: iroha.CodeUNDECIDED,
+		Code: protocol.CodeUNDECIDED,
 	}
 	builder := flatbuffers.NewBuilder(0)
 	ro := res.Serialize(builder)
@@ -29,7 +29,7 @@ func (ss mockSumeragiServer) Torii(ctx context.Context, ev *iroha.Transaction) (
 	return builder, nil
 }
 
-func (ss mockSumeragiServer) Verify(ctx context.Context, ev *iroha.ConsensusEvent) (*flatbuffers.Builder, error) {
+func (ss mockSumeragiServer) Verify(ctx context.Context, ev *protocol.ConsensusEvent) (*flatbuffers.Builder, error) {
 	builder := flatbuffers.NewBuilder(0)
 	builder.Finish(0)
 
@@ -39,6 +39,6 @@ func (ss mockSumeragiServer) Verify(ctx context.Context, ev *iroha.ConsensusEven
 func NewMockServer() *grpc.Server {
 	s := grpc.NewServer(grpc.CustomCodec(flatbuffers.FlatbuffersCodec{}))
 	ss := mockSumeragiServer{}
-	iroha.RegisterSumeragiServer(s, ss)
+	protocol.RegisterSumeragiServer(s, ss)
 	return s
 }
