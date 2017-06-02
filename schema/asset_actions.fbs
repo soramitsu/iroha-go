@@ -1,0 +1,46 @@
+include "asset.fbs";
+include "primitives.fbs";
+
+namespace protocol;
+
+table Add {
+  target_account: string  (required);
+  asset:  Asset (required);
+}
+
+table Subtract {
+  target_account: string  (required);
+  asset:  Asset (required);
+}
+
+table Transfer {
+  sender_account: string  (required);
+  receiver_account: string  (required);
+  asset:  Asset (required);
+}
+
+// [WIP] Exchange
+table Exchange {
+  sender_account: string  (required);
+  receiver_account: string  (required);
+  sender_asset:  Asset  (required);
+  receiver_asset:  Asset  (required);
+}
+
+table AssetSetPermission {
+  account:    string  (required);
+  asset_uuid: string  (required);
+  permission: [ubyte] (required);
+}
+
+union AssetAction{
+  Add,
+  Subtract,
+  Transfer,
+  Exchange,
+
+  AssetSetPermission
+}
+table AssetActionWrapper {
+  action: AssetAction;
+}

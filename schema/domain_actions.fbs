@@ -1,0 +1,74 @@
+include "primitives.fbs";
+include "asset.fbs";
+
+namespace protocol;
+
+table AssetCreate {
+  asset: Asset (required);
+}
+
+table Delete {
+  target: string  (required);
+}
+
+table Move {
+  source: string  (required);
+  destination:  string  (required);
+}
+
+table AccountCreate {
+  username: string  (required);
+  signatories:  [Signature] (required);
+  quorum: ubyte;
+  target_domain: string;
+}
+
+table AccountDelete {
+  target_account:  string  (required);
+}
+
+table AccountRegister {
+  target_account:      string  (required);
+  target_domain:       string;
+  permission:          [ubyte];
+}
+
+table AccountUnregister {
+  target_account: string  (required);
+  target_domain:  string;
+}
+
+table DomainCreate {
+  domain: string  (required);
+  root_account: string  (required);
+}
+
+table DomainSetPermission {
+  domain: string  (required);
+  target_account:  string  (required);
+  permission: [ubyte] (required);
+}
+
+// [WIP] DomainAddNotify
+table DomainSetNotify {
+  target_domain:  string  (required);
+  is_notify:  bool;
+}
+
+union DomainAction{
+  AssetCreate,
+  DomainCreate,
+  Delete,
+  Move,
+
+  AccountDelete,
+  AccountRegister,
+  AccountUnregister,
+
+  DomainSetPermission,
+  DomainSetNotify
+}
+
+table DomainActionWrapper {
+  action: DomainAction;
+}
