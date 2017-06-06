@@ -59,10 +59,3 @@ rpc_service Hijiri {
   Kagami(Ping): HijiriResponse (streaming: "none");
 }
 
-rpc_service Sync {
-  checkHash(Ping): CheckHashResponse  (streaming: "none");
-  getPeers(Ping):  PeersResponse      (streaming: "none");
-
-  getTransactions(Ping):             TransactionResponse (streaming: "none");
-  fetchStreamTransaction(TxRequest): TxWithIndex (streaming: "server", idempotent);
-}
