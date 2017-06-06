@@ -7,7 +7,7 @@ import (
 
 type Signature struct {
 	Pubkey []byte
-	Sig []byte
+	Sig    []byte
 }
 
 func (s Signature) Serialize(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
@@ -20,8 +20,8 @@ func (s Signature) Serialize(builder *flatbuffers.Builder) flatbuffers.UOffsetT 
 	return protocol.SignatureEnd(builder)
 }
 
-func (s *Signature) Deserialize(b []byte) {
-	signature := protocol.GetRootAsSignature(b, 0)
+func (s *Signature) Deserialize(b []byte, offset flatbuffers.UOffsetT) {
+	signature := protocol.GetRootAsSignature(b, offset)
 	s.Pubkey = signature.PubkeyBytes()
 	s.Sig = signature.SigBytes()
 }
