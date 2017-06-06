@@ -1,40 +1,54 @@
 package model
 
 import (
+	"github.com/soramitsu/iroha-go/protocol"
 	"github.com/google/flatbuffers/go"
-	"github.com/soramitsu/iroha-go/iroha"
 )
 
 type Response struct {
-	Code      byte
+	Code      ResponseCode
 	Message   string
 	Signature Signature
 }
 
-func (r Response) Serialize(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+func (r Response) Serialize(builder *flatbuffers.Builder)  flatbuffers.UOffsetT {
 	msg := builder.CreateString(r.Message)
 	sig := r.Signature.Serialize(builder)
 
-	iroha.ResponseStart(builder)
-	iroha.ResponseAddMessage(builder, msg)
-	iroha.ResponseAddSignature(builder, sig)
-	iroha.ResponseAddCode(builder, r.Code)
-	return iroha.ResponseEnd(builder)
+	protocol.SumeragiResponseStart(builder)
+	protocol.SumeragiResponseAddMessage(builder, msg)
+	protocol.SumeragiResponseAddSignature(builder, sig)
+	protocol.SumeragiResponseAddCode(builder, r.Code.ToByte())
+
+	return protocol.SumeragiResponseEnd(builder)
 }
 
-func NewResponse(resp *iroha.Response) *Response {
+func NewResponse(res *protocol.SumeragiResponse) *Response {
 	r := &Response{
-		Code:resp.Code(),
-		Message:string(resp.Message()),
+		Code: ResponseCode(res.Code()),
+		Message: string(res.Message()),
 	}
 
-	sig := iroha.Signature{}
-	resp.Signature(&sig)
+	sig := protocol.Signature{}
+	res.Signature(&sig)
+
 	r.Signature = Signature{
-		PublicKey: string(sig.PublicKey()),
-		Signature: string(sig.SignatureBytes()),
-		Timestamp: sig.Timestamp(),
+		Pubkey: sig.PubkeyBytes(),
+		Sig: sig.SigBytes(),
 	}
 
 	return r
 }
+
+
+//go:generate stringer -type=ResponseCode
+type ResponseCode int
+
+func (rc ResponseCode) ToByte() byte {
+	return byte(rc)
+}
+
+const (
+	OK ResponseCode = iota + 1
+	Fail
+)

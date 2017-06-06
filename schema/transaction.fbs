@@ -1,25 +1,23 @@
-include "commands.fbs";
+include "actions.fbs";
 include "primitives.fbs";
 
-namespace iroha;
+namespace protocol;
 
 table Transaction {
-  creatorPubKey:   string      (required);
-  command:         Command     (required);
-  signatures:      [Signature] (required);
-  hash:            [ubyte];
-// sha256(
-//    creatorPubKey + command + timestamp + attachment
-// ),
-// * Without signatures and hash
+  creator: Signature (required);
+  sigs:    [Signature];
+  created: ulong;   // 64 bit(8 bytes)
+  nonce:   uint;    // 32 bit(4 bytes)
 
-  timestamp:       ulong;
-  attachment:      Attachment;
+  // union vector is supported in C++ only.
+  // And, Transaction contains array of objects Action. So, Action needs to be wrapped by ActionWrapper.
+  // https://github.com/google/flatbuffers/commit/b0752e179bdbae516125cccacd7aebcfd83033a9
+  actions: [ActionWrapper] (required);
+
+  attachment: Attachment;
 }
-
 
 table Attachment {
   mime: string;
   data: [ubyte];
 }
-

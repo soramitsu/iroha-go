@@ -1,14 +1,18 @@
 include "main.fbs";
 
-namespace iroha;
+namespace protocol;
 
 file_identifier "IROH";
 file_extension  "iroha";
 
-table Response {
+table SumeragiResponse {
   message:   string;
-  code:      Code;
+  code:      ResponseCode;
   signature: Signature;
+}
+
+table HijiriResponse {
+ // Not defined yet.
 }
 
 table Ping {
@@ -17,29 +21,15 @@ table Ping {
 }
 
 table CheckHashResponse {
-    isCorrect: bool;
-    isRoot: bool;
-    isExist: bool;
+  isCorrect: bool;
+  isRoot: bool;
+  isExist: bool;
 }
 
 table PeersResponse {
   message:    string;
   peers:      [Peer];
   sender:     string;
-}
-
-table AssetQuery{
-  pubKey:      string;
-  ledger_name: string;
-  domain_name: string;
-  asset_name:  string;
-  uncommitted:   bool;
-}
-
-table AssetResponse {
-  message:      string  (required);
-  code:         Code;
-  assets:       [Asset];
 }
 
 table TxWithIndex {
@@ -52,25 +42,20 @@ table TxRequest {
   sender: string (required);
 }
 
-// Used by sending transaction
 rpc_service Sumeragi {
-
-    Torii(Transaction):Response (streaming: "none");
-    // ToDo rename it.
-
-    // sumeragi uses.
-    Verify(ConsensusEvent):Response (streaming: "none");
+  // Used by sending block in consensus.
+  Communicate(Block): SumeragiResponse (streaming: "none");
 }
 
-// Used by sending transaction
-rpc_service AssetRepository {
+rpc_service ClientService {
+  // Used by sending transaction
+  Torii(Transaction): SumeragiResponse (streaming: "none");
 
-    AccountGetAsset(AssetQuery):AssetResponse (streaming: "none");
-
+  // Query(QueryRequestWrapper): QueryRequestWrapper (streaming: "none");
 }
 
 rpc_service Hijiri {
-    // Kagami means ping
-    Kagami(Ping):Response    (streaming: "none");
+  // Kagami means ping
+  Kagami(Ping): HijiriResponse (streaming: "none");
 }
 

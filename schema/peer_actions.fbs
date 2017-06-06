@@ -1,0 +1,45 @@
+include "primitives.fbs";
+
+namespace protocol;
+
+table Peer {
+  ip: string  (required);
+  uuid: string  (required);
+  name: string;
+  trust:  double;
+  state:  bool;
+}
+
+table PeerAdd {
+  peer: Peer  (required);
+}
+
+table PeerRemove {
+  target_peer: string  (required);
+}
+
+table PeerSetTrust {
+  target_peer:  string  (required);
+  trust:  double;
+}
+
+table PeerChangeTrust {
+  target_peer:  string  (required);
+  turst:  double;
+}
+
+table PeerSetState {
+  target_peer:  string  (required);
+  state:  bool;
+}
+
+union PeerAction{
+  PeerAdd,
+  PeerRemove,
+  PeerSetTrust,
+  PeerChangeTrust,
+  PeerSetState
+}
+table PeerActionWrapper {
+  action: PeerAction;
+}

@@ -1,23 +1,12 @@
 package model
 
-import (
-	"github.com/google/flatbuffers/go"
-	"github.com/soramitsu/iroha-go/iroha"
-)
+import "github.com/google/flatbuffers/go"
 
 type Signature struct {
-	PublicKey string
-	Signature string
-	Timestamp uint64
+	Pubkey []byte
+	Sig []byte
 }
 
 func (s Signature) Serialize(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
-	pubkey := builder.CreateString(s.PublicKey)
-	sig := builder.CreateString(s.Signature)
-
-	iroha.SignatureStart(builder)
-	iroha.SignatureAddPublicKey(builder, pubkey)
-	iroha.SignatureAddSignature(builder, sig)
-	iroha.SignatureAddTimestamp(builder, s.Timestamp)
-	return iroha.SignatureEnd(builder)
+	return 0
 }

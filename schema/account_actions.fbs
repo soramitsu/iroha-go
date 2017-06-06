@@ -1,0 +1,37 @@
+include "primitives.fbs";
+
+namespace protocol;
+
+table SignatoriesRegister {
+  to_account: string  (required);
+  signatories:  [Signature] (required); // hash = sha3_256(public_key + tx_created_timestamp)
+}
+
+table SignatoriesUnregister {
+  from_account: string  (required);
+  signatories:  [Signature] (required); // hash = sha3_256(public_key + tx_created_timestamp)
+}
+
+table AccountSetQuorum {
+  target_account: string  (required);
+  quorum: ubyte;
+}
+
+table AccountDelegate {
+  auditor_account:  string  (required);
+}
+table AccountUndelegate {
+  auditor_account:  string  (required);
+}
+
+union AccountAction{
+  SignatoriesRegister,
+  SignatoriesUnregister,
+  AccountSetQuorum,
+
+  AccountDelegate,
+  AccountUndelegate
+}
+table AccountActionWrapper {
+  action: AccountAction;
+}

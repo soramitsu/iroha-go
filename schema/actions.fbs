@@ -1,0 +1,21 @@
+include "account_actions.fbs";
+include "asset_actions.fbs";
+include "domain_actions.fbs";
+include "peer_actions.fbs";
+
+namespace protocol;
+
+
+union Action {
+  AssetActionWrapper,
+  AccountActionWrapper,
+  DomainActionWrapper,
+  PeerActionWrapper
+}
+
+// union vector is supported in C++ only.
+// And, Transaction contains array of objects Action. So, Action needs to be wrapped by ActionWrapper.
+// https://github.com/google/flatbuffers/commit/b0752e179bdbae516125cccacd7aebcfd83033a9
+table ActionWrapper {
+  action: Action;
+}

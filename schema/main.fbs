@@ -1,17 +1,23 @@
 include "transaction.fbs";
-include "commands.fbs";
+include "actions.fbs";
 
-namespace iroha;
+namespace protocol;
 
 file_identifier "IROH";
 file_extension  "iroha";
 
-enum Code: ubyte {COMMIT, FAIL, UNDECIDED} // TODO: maybe more?
+enum ResponseCode: ubyte {OK, FAIL}
+enum BlockState: ubyte {UNCOMMITTED, COMMITTED}
 
-table ConsensusEvent {
-  peerSignatures: [Signature];
-  transactions:   [TransactionWrapper];
-  code:           Code;
+table Block {
+  txs:          [TransactionWrapper] (required);
+  peer_sigs:    [Signature] (required);
+  prev_hash:    [ubyte] (required);
+  length:       uint;
+  merkle_root:  [ubyte] (required);
+  height:       ulong;
+  created:      ulong;
+  block_state:  BlockState;
 }
 
 // to make an array of nested flatbuffers, we should use this:
@@ -19,22 +25,14 @@ table TransactionWrapper {
   tx: [ubyte] (nested_flatbuffer: "Transaction");
 }
 
-// Can't consensus Is it OK?
 table TransactionResponse {
-  message:              string  (required);
-  index:                ulong;
-  code:                 Code;
-  transactions:         [Transaction];
+  message:      string  (required);
+  index:        ulong;
+  transactions: [Transaction];
 }
 
 table ReceiverConfirmation {
   signature: Signature;
+  code:      ResponseCode;
   hash:      [ubyte];
 }
-
-// what is Response?
-//table Response {
-//  message:   [Object];
-//  code:      Code;
-//  signature: Signature;
-//}
